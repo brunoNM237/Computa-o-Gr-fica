@@ -61,23 +61,25 @@ posicoes = np . array ([
  0.0 , 0.5 , 0.0 , 1.0 , # v0 topo
  -0.5 , -0.5 , 0.0 , 1.0 , # v1 esquerda
  0.5 , -0.5 , 0.0 , 1.0 , # v2 direita
-] , dtype =’f4 ’)
+] , dtype ='f4')
 
 cores = np . array ([
 1.0 , 0.0 , 0.0 , 1.0 , # v0 vermelho
 0.0 , 1.0 , 0.0 , 1.0 , # v1 verde
 0.0 , 0.0 , 1.0 , 1.0 , # v2 azul
-] , dtype =’f4 ’)
+] , dtype ='f4')
 
-
-vbo_pos = ctx.buffer(posicoes.tobytes())
-vbo_cor = ctx.buffer(cores.tobytes)
 
 # O VBO é memória bruta na VRAM. 
 # VAO diz como lê-la. '4f 4f' significa quatro floats
 # para vPosition e quatro para vColors, nessa ordem.
-vbo = ctx.buffer(vertices.tobytes())
-vao = ctx.vertex_array(prog, [(vbo, '4f 4f', 'vPosition', 'vColors')])
+
+vbo_pos = ctx.buffer(posicoes.tobytes())
+vbo_cor = ctx.buffer(cores.tobytes())
+
+vao = ctx.vertex_array(prog, [(vbo_pos, '4f', 'vPosition'),
+                              (vbo_cor, '4f', 'vColors'),
+                             ])
 
 while not glfw.window_should_close(janela):
     if glfw.get_key(janela, glfw.KEY_ESCAPE) == glfw.PRESS:
