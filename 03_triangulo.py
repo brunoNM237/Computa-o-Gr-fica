@@ -40,30 +40,6 @@ ctx = moderngl.create_context()
 
 # -------------- lado da GPU
 
-VERTEX_SHADER = """
-#version 400 core
-
-layout(location = 0) in vec4 vPosition;
-layout(location = 1) in vec4 vColors;
-
-out vec4 v2fcolor;
-
-void main() {
-    gl_Position = vPosition;
-    v2fcolor = vColors;
-}
-"""
-
-FRAGMENT_SHADER = """
-#version 400 core
-
-in vec4 v2fcolor;
-out vec4 outfragcolor;
-
-void main() {
-    outfragcolor = v2fcolor;
-}
-"""
 
 # O driver compila e liga os dois shaders agora, em tempo de execução.
 SHADERS = Path(__file__).parent / "shaders"
@@ -81,11 +57,21 @@ prog = ctx.program(
 # Dados intercalados: posição (x,y,z,w) e cor (r,g,b,a) de cada vértice,
 # vizinhos na memória. 'f4' é float de 32 bits. 
 # Sem dtype, o numpy usa float64 e a GPU leria lixo.
-vertices = np.array([
-     0.0,  0.5, 0.0, 1.0,   1.0, 0.0, 0.0, 1.0,   # v0 topo, vermelho
-    -0.5, -0.5, 0.0, 1.0,   0.0, 1.0, 0.0, 1.0,   # v1 esquerda, verde
-     0.5, -0.5, 0.0, 1.0,   0.0, 0.0, 1.0, 1.0,   # v2 direita, azul
-], dtype='f4')
+posicoes = np . array ([
+ 0.0 , 0.5 , 0.0 , 1.0 , # v0 topo
+ -0.5 , -0.5 , 0.0 , 1.0 , # v1 esquerda
+ 0.5 , -0.5 , 0.0 , 1.0 , # v2 direita
+] , dtype =’f4 ’)
+
+cores = np . array ([
+1.0 , 0.0 , 0.0 , 1.0 , # v0 vermelho
+0.0 , 1.0 , 0.0 , 1.0 , # v1 verde
+0.0 , 0.0 , 1.0 , 1.0 , # v2 azul
+] , dtype =’f4 ’)
+
+
+vbo_pos = ctx.buffer(posicoes.tobytes())
+vbo_cor = ctx.buffer(cores.tobytes)
 
 # O VBO é memória bruta na VRAM. 
 # VAO diz como lê-la. '4f 4f' significa quatro floats
@@ -103,7 +89,8 @@ while not glfw.window_should_close(janela):
     glfw.poll_events()
 
 vao.release()
-vbo.release()
+vbo_pos.release()
+vbo_cor.release()
 prog.release()
 glfw.terminate()
 print("Execucao finalizada.")
