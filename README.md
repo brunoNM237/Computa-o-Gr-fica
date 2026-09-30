@@ -1,3 +1,1 @@
-# Computa-o-Gr-fica
-# Computa-o-Gr-fica
-# Computa-o-Gr-fica
+exercícios, projetos da matéria de computação gráfica.
