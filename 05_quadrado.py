@@ -6,7 +6,7 @@ Executar: python 04_quadrado.py      Sair: ESC ou fechar a janela
 """
 import sys
 from pathlib import Path
-
+import random 
 import glfw
 import moderngl
 import numpy as np
@@ -59,14 +59,12 @@ DIAGONAL_13 = np.array([0,1,3,1,2,3], dtype = 'u4')
 
 BRANCO = (1.0, 1.0, 1.0, 1.0)
 PRETO = (0.0, 0.0, 0.0, 1.0)
-
-
+RANDOM = (random.random(), random.random(), random.random(), 1.0)
 vbo = ctx.buffer(vertices.tobytes())
 ebo = ctx.buffer(DIAGONAL_02.tobytes())
 
 vao = ctx.vertex_array(
-    prog, [(vbo, '4f 4f', 'vPosition', 'vColors')], index_buffer=ebo
-)
+    prog, [(vbo, '4f 4f', 'vPosition', 'vColors')], index_buffer=ebo )
 
 diagonal_alternativa = False 
 modo_noite = False
@@ -75,8 +73,7 @@ modo_noite = False
 def tecla(window, key, scancode, action, mods):
 
 	global diagonal_alternativa, modo_noite
-	if action != glfw.PRESS:
-		return
+	
 	if key == glfw.KEY_ESCAPE:
 		glfw.set_window_should_close(window, True)
 	elif key == glfw.KEY_D:
@@ -94,7 +91,7 @@ while not glfw.window_should_close(janela):
     if glfw.get_key(janela, glfw.KEY_ESCAPE) == glfw.PRESS:
         glfw.set_window_should_close(janela, True)
 
-    ctx.clear(*(PRETO if modo_noite else BRANCO))
+    ctx.clear(*(PRETO if  modo_noite else BRANCO))
     vao.render(moderngl.TRIANGLES)
     glfw.swap_buffers(janela)
     glfw.poll_events()
